@@ -1,2 +1,2 @@
 # learnaws.click
-This repository is build when i study AWS Cloud.
+This repository has been built as part of my ongoing studies on AWS Cloud.
