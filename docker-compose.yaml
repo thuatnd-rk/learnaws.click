@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    command: npm run dev
+    depends_on:
+      - backend
+
+  # Backend service
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+      - redis
+
+  # PostgreSQL service
+  db:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Redis service
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+

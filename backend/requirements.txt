@@ -1,0 +1,23 @@
+# Django framework
+Django>=4.2
+
+# Django REST Framework (API)
+djangorestframework>=3.14
+
+# PostgreSQL support
+psycopg2-binary>=2.9
+
+# Redis support
+django-redis>=5.3.0
+
+# Environment variables
+python-decouple>=3.8
+
+# Optional: Handling CORS
+django-cors-headers>=3.14
+
+# Optional: Authentication with JWT
+djangorestframework-simplejwt>=5.2
+
+# Testing (if needed)
+pytest-django>=4.5
