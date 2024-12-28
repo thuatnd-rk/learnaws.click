@@ -1,4 +1,11 @@
 services:
+  # AI service
+  ai-service:
+    build:
+      context: ./ai-service
+    ports:
+      - "5000:5000"
+
   # Frontend service
   frontend:
     build:
