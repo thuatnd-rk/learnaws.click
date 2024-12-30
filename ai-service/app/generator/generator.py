@@ -1,8 +1,8 @@
 import boto3
-
+client = boto3.client('bedrock-agent-runtime')
 def generate_response(query):
-    client = boto3.client('bedrock-agent-runtime')
-    response = client.retrieve_and_generate(
+   
+    response = client.retrieve_and_generate_stream(
         input={
             'text': f'{query}'
         },
@@ -23,5 +23,16 @@ def generate_response(query):
             'type': 'KNOWLEDGE_BASE'
         }
     )
-    
-    return response["output"]["text"]
+   
+    return response
+ 
+response = generate_response('What is EC2')
+rs = ''
+for i in response['stream']:
+    try:
+        if i['output']['text']:
+            rs += i['output']['text']
+            print (i['output']['text'])
+    except:
+        continue
+print(rs)
