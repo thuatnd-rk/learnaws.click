@@ -28,3 +28,5 @@ Our 3-month development roadmap includes:
 ## Documentation
 
 For detailed project documentation, see the [project-guide](./project-guide/) directory.
+
+## About me
