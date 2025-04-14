@@ -3,25 +3,25 @@
 ## Tuần 1: Khởi tạo dự án (Monorepo + UI chatbot)
 > 🎯 Mục tiêu: Có cấu trúc repo chuẩn, giao diện chatbot đơn giản và API route đầu tiên
 
-### Thứ 2
+### Thứ 2 (Done all tasks)
 - [ ] Tạo GitHub repo `devops-ai-webapp`
 - [ ] Cấu trúc thư mục: `frontend`, `backend`, `infra`, `.github/workflows/`, `docs/`
 - [ ] Tạo `.gitignore`, `README.md`, commit & push
 
-### Thứ 3
+### Thứ 3 (Done all tasks)
 - [ ] Init frontend: Next.js hoặc Vue
 - [ ] Xóa mã mẫu, tạo cấu trúc layout chính
 
-### Thứ 4
+### Thứ 4 (Done all tasks)
 - [ ] Tạo component giao diện chatbot (input + output)
 - [ ] Lưu state hội thoại bằng state hook / Vue reactive
 
-### Thứ 5
+### Thứ 5 (Done all tasks)
 - [ ] Init backend bằng Node.js + Express
 - [ ] Cài `express`, `cors`, `dotenv`
 - [ ] Tạo route `/api/chat`, trả về JSON mẫu
 
-### Thứ 6-7
+### Thứ 6-7 (Done all tasks)
 - [ ] Gọi `/api/chat` từ frontend
 - [ ] Hiển thị response lên giao diện
 
@@ -30,7 +30,7 @@
 ## Tuần 2: Tích hợp AWS Bedrock + Prompt Template
 > 🎯 Mục tiêu: Gọi được model AI từ backend và hiển thị lên frontend
 
-### Thứ 2
+### Thứ 2 (Done all tasks)
 - [ ] Cài SDK Bedrock: `@aws-sdk/client-bedrockruntime`
 - [ ] Tạo `.env`, config AWS region, model ID, v.v.
 - [ ] Viết `bedrockClient.js`
