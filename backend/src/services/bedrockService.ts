@@ -1,5 +1,6 @@
-import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
+import { BedrockRuntimeClient, InvokeModelCommand, InvokeModelWithResponseStreamCommand } from "@aws-sdk/client-bedrock-runtime";
 import dotenv from 'dotenv';
+import { createClaudePayload, createClaudePayloadWithContext } from './promptTemplates';
 
 dotenv.config();
 
@@ -10,37 +11,19 @@ const bedrockClient = new BedrockRuntimeClient({
 });
 
 /**
- * Gọi Claude AI với prompt và trả về kết quả
+ * Gọi Claude AI với streaming response
  * @param prompt Câu hỏi hoặc yêu cầu của người dùng
- * @returns Phản hồi từ Claude AI
+ * @returns Stream phản hồi từ Claude AI
  */
-export async function generateAIResponse(prompt: string): Promise<string> {
+export async function generateStreamingResponse(prompt: string) {
   try {
-    console.log(`Sending prompt to Claude: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}"`);
+    console.log(`Sending streaming prompt to Claude: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}"`);
     
-    // Tạo đúng format cho Claude 3 Sonnet theo Messages API
-    const payload = {
-      anthropic_version: "bedrock-2023-05-31",
-      max_tokens: 1500,
-      temperature: 0.7,
-      system: "Bạn là một kỹ sư DevOps cấp cao với chuyên môn về AWS, Kubernetes, CI/CD, và infrastructure. " +
-              "Hãy trả lời một cách chuyên nghiệp, đầy đủ và dễ hiểu. " +
-              "Phản hồi của bạn nên ngắn gọn nhưng đầy đủ thông tin, ưu tiên các giải pháp thực tế.",
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: prompt
-            }
-          ]
-        }
-      ]
-    };
+    // Sử dụng template để tạo payload
+    const payload = createClaudePayload(prompt);
 
-    // Sử dụng InvokeModelCommand
-    const command = new InvokeModelCommand({
+    // Sử dụng InvokeModelWithResponseStreamCommand để streaming
+    const command = new InvokeModelWithResponseStreamCommand({
       modelId: process.env.BEDROCK_MODEL_ID,
       contentType: "application/json",
       accept: "application/json",
@@ -49,8 +32,31 @@ export async function generateAIResponse(prompt: string): Promise<string> {
 
     // Gửi request đến Bedrock
     const response = await bedrockClient.send(command);
+    return response.body;
     
-    // Parse kết quả
+  } catch (error) {
+    console.error("Error calling Claude with streaming:", error);
+    throw error;
+  }
+}
+
+// Cập nhật hàm generateAIResponse để sử dụng template
+export async function generateAIResponse(prompt: string): Promise<string> {
+  try {
+    console.log(`Sending prompt to Claude: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}"`);
+    
+    // Sử dụng template để tạo payload
+    const payload = createClaudePayload(prompt);
+    
+    const command = new InvokeModelCommand({
+      modelId: process.env.BEDROCK_MODEL_ID,
+      contentType: "application/json",
+      accept: "application/json",
+      body: JSON.stringify(payload)
+    });
+    
+    const response = await bedrockClient.send(command);
+    
     if (response.body) {
       const responseBody = JSON.parse(new TextDecoder().decode(response.body));
       return responseBody.content[0].text;
@@ -63,39 +69,21 @@ export async function generateAIResponse(prompt: string): Promise<string> {
   }
 }
 
-/**
- * Hàm mở rộng - gọi Claude AI với toàn bộ lịch sử hội thoại
- * @param messages Mảng các tin nhắn trong cuộc hội thoại
- * @returns Phản hồi từ Claude AI
- */
+// Cập nhật hàm generateAIResponseWithContext để sử dụng template
 export async function generateAIResponseWithContext(messages: Array<{type: string, text: string}>): Promise<string> {
   try {
-    // Chuyển đổi định dạng tin nhắn để phù hợp với API
-    // QUAN TRỌNG: Claude chỉ chấp nhận 'user' hoặc 'assistant' làm role, không chấp nhận 'system'
-    const formattedMessages = messages.map(msg => ({
-      role: msg.type === 'user' ? 'user' : 'assistant',
-      content: [{ type: 'text', text: msg.text }]
-    }));
+    console.log(`Sending conversation with ${messages.length} messages to Claude`);
     
-    // Tạo payload với lịch sử hội thoại và system instruction 
-    // đặt vào thuộc tính system riêng thay vì qua messages
-    const payload = {
-      anthropic_version: "bedrock-2023-05-31",
-      max_tokens: 1500,
-      temperature: 0.7,
-      system: "Bạn là một kỹ sư DevOps cấp cao với chuyên môn về AWS, Kubernetes, CI/CD, và infrastructure. " +
-              "Hãy trả lời một cách chuyên nghiệp, đầy đủ và dễ hiểu.",
-      messages: formattedMessages
-    };
-
-    // Gọi API
+    // Sử dụng template để tạo payload với context
+    const payload = createClaudePayloadWithContext(messages);
+    
     const command = new InvokeModelCommand({
       modelId: process.env.BEDROCK_MODEL_ID,
       contentType: "application/json",
-      accept: "application/json", 
+      accept: "application/json",
       body: JSON.stringify(payload)
     });
-
+    
     const response = await bedrockClient.send(command);
     
     if (response.body) {
