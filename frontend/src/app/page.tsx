@@ -1,27 +1,6 @@
 export default function HomePage() {
   return (
     <div className="min-h-screen font-sans bg-white text-gray-800">
-      {/* Header / Navbar */}
-      <header className="border-b shadow-sm sticky top-0 bg-white z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <img 
-              src="/images/heroes/web-logo.png" 
-              alt="Learn AWS & DevOps" 
-              className="h-12 mr-2"
-            />
-            <span className="text-xl font-bold tracking-tight">Learn AWS & DevOps</span>
-          </div>
-          <nav className="space-x-6 text-sm font-medium text-gray-700">
-            <a href="#" className="hover:text-blue-600">Home</a>
-            <a href="#" className="hover:text-blue-600">AI Assistant</a>
-            <a href="#" className="hover:text-blue-600">AWS</a>
-            <a href="#" className="hover:text-blue-600">Kubernetes</a>
-            <a href="#" className="hover:text-blue-600">Terraform</a>
-            <a href="#" className="hover:text-blue-600">DevOps</a>
-          </nav>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="max-w-4xl mx-auto px-4 py-12">
