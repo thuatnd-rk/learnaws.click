@@ -1,18 +1,30 @@
+// src/index.ts
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import chatRoutes from './routes/chatRoutes';
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Backend is running!');
-});
+// Routes
+app.use('/api', chatRoutes);
 
-app.post('/api/chat', (req, res) => {
-  const { message } = req.body;
-  res.json({ reply: `Bạn hỏi: "${message}" — đây là phản hồi mẫu từ DevOps Assistant.` });
+// Basic route
+app.get('/', (req, res) => {
+  res.send('DevOps AI Assistant API is running!');
 });
 
 const port = process.env.PORT || 3001;
-app.listen(port, () => console.log(`🚀 Backend running at http://localhost:${port}`));
+app.listen(port, () => {
+  console.log(`🚀 Backend running at http://localhost:${port}`);
+});
+
+// Xử lý lỗi unhandled
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled Rejection:', error);
+});
