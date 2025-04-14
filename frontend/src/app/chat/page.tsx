@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { sendMessage } from "./api";
 import { Loader2 } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 type Message = {
   type: "user" | "ai";
@@ -68,7 +71,7 @@ export default function ChatPage() {
       <h1 className="text-2xl font-semibold mb-6 text-center">DevOps AI Assistant</h1>
 
       {/* Container chính */}
-      <div className="w-full max-w-2xl flex flex-col flex-grow overflow-hidden">
+      <div className="w-full flex flex-col flex-grow overflow-hidden px-4 md:px-8 lg:px-16">
         {/* Error display */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-3 mb-4 text-sm">
@@ -102,24 +105,39 @@ export default function ChatPage() {
 
         {/* Conversation list */}
         <div className="flex-grow overflow-y-auto mb-4 space-y-4">
-          {conversation.map((msg, idx) => (
+        {conversation.map((msg, idx) => (
+          <div
+            key={idx}
+            className={`flex ${
+              msg.type === "user" ? "justify-end" : "justify-start"
+            } mb-4`}
+          >
             <div
-              key={idx}
-              className={`flex ${
-                msg.type === "user" ? "justify-end" : "justify-start"
+              className={`max-w-[75%] px-4 py-3 rounded-2xl shadow-md ${
+                msg.type === "user"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 dark:bg-gray-800 text-black dark:text-gray-100"
               }`}
             >
-              <div
-                className={`max-w-[80%] px-4 py-3 rounded-xl text-sm ${
-                  msg.type === "user"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100"
-                }`}
-              >
-                {msg.text}
-              </div>
+              {msg.type === "user" ? (
+                <div className="text-sm">{msg.text}</div>
+              ) : (
+                <div className="markdown-body">
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]} 
+                    rehypePlugins={[rehypeRaw]}
+                    components={{
+                      // Apply the className to the wrapper element instead
+                      p: ({node, ...props}) => <p className="text-sm prose dark:prose-invert max-w-none" {...props} />
+                    }}
+                  >
+                    {msg.text}
+                  </ReactMarkdown>
+                </div>
+              )}
             </div>
-          ))}
+          </div>
+        ))}
           
           {/* Auto-scroll anchor */}
           <div ref={messagesEndRef} />
@@ -134,28 +152,42 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* Message input */}
-        <div className="bg-[var(--background)] pt-2">
-          <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 bg-white dark:bg-gray-900 shadow-sm focus-within:ring-2 ring-blue-500 transition">
-            <input
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Ask me about DevOps, AWS, or cloud technologies..."
-              className="flex-grow outline-none bg-transparent text-sm"
-              disabled={loading}
-            />
-            <button
-              onClick={handleSend}
-              className="ml-2 flex items-center justify-center"
-              disabled={loading}
-            >
-              {loading ? (
-                <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
-              ) : (
-                <span className="text-blue-500 hover:text-blue-700">➤</span>
-              )}
-            </button>
+        {/* Message input - Fixed positioning with reduced width & auto-expanding */}
+        <div className="bg-[var(--background)] pt-2 pb-4 flex justify-center">
+          <div className="w-1/2 relative">
+            <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 bg-white dark:bg-gray-900 shadow-sm focus-within:ring-2 ring-blue-500 transition">
+              <textarea
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  // Auto-adjust height based on content
+                  e.target.style.height = "24px"; // Reset height
+                  const newHeight = Math.min(e.target.scrollHeight, 24 * 4); // Limit to 4x original height
+                  e.target.style.height = `${newHeight}px`;
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); // Prevent newline
+                    handleSend();
+                  }
+                }}
+                placeholder="Ask me about DevOps, AWS, or cloud technologies..."
+                className="flex-grow outline-none bg-transparent text-sm min-h-[24px] max-h-[96px] overflow-y-auto resize-none"
+                disabled={loading}
+                rows={1}
+              />
+              <button
+                onClick={handleSend}
+                className="ml-2 flex items-center justify-center"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+                ) : (
+                  <span className="text-blue-500 hover:text-blue-700">➤</span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -20,3 +20,52 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Thêm vào globals.css hoặc tạo file markdown-styles.css mới */
+.markdown-body {
+  @apply text-sm;
+}
+
+.markdown-body h2 {
+  @apply text-lg font-bold mt-4 mb-2;
+}
+
+.markdown-body h3 {
+  @apply text-base font-semibold mt-3 mb-1;
+}
+
+.markdown-body p {
+  @apply my-2;
+}
+
+.markdown-body ul {
+  @apply list-disc pl-6 my-2;
+}
+
+.markdown-body ol {
+  @apply list-decimal pl-6 my-2;
+}
+
+.markdown-body li {
+  @apply mb-1;
+}
+
+.markdown-body pre {
+  @apply bg-gray-100 dark:bg-gray-900 rounded p-3 my-3 overflow-x-auto;
+}
+
+.markdown-body code {
+  @apply bg-gray-100 dark:bg-gray-900 px-1 py-0.5 rounded text-sm font-mono;
+}
+
+.markdown-body pre code {
+  @apply bg-transparent p-0;
+}
+
+.markdown-body strong {
+  @apply font-bold;
+}
+
+.markdown-body em {
+  @apply italic;
+}
