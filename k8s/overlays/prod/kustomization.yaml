@@ -1,0 +1,25 @@
+# k8s/overlays/prod/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: learnaws
+
+resources:
+- ../../base
+- ingress.yaml
+
+patchesStrategicMerge:
+- frontend-patch.yaml
+- backend-patch.yaml
+
+configMapGenerator:
+- name: backend-config
+  behavior: merge
+  literals:
+  - NODE_ENV=production
+
+images:
+- name: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/learnaws-frontend:latest
+  newTag: prod
+- name: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/learnaws-backend:latest
+  newTag: prod

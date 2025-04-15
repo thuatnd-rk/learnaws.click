@@ -1,0 +1,42 @@
+# k8s/base/backend/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: learnaws
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/learnaws-backend:latest
+        ports:
+        - containerPort: 3001
+          name: http
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        volumeMounts:
+        - name: aws-creds
+          mountPath: "/home/expressjs/.aws"
+          readOnly: true
+      volumes:
+      - name: aws-creds
+        secret:
+          secretName: aws-credentials

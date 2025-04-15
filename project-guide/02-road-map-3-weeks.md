@@ -3,7 +3,7 @@
 ## Phase 1: Khởi tạo hệ thống (Tuần 1)
 - Thiết kế giao diện frontend (Next.js/Vue - Tailwind).
 - Backend API - Tích hợp chatbot AI.
-- Docker hóa và CI/CD pipeline GitHub Actions.
+- Docker hóa bằng dockerfile & docker-compose.
 - Deploy EC2 với Nginx reverse proxy.
 - Viết YAML chuẩn cho FE/BE, test local K8s.
 - Triển khai cụm K8S trên EC2 (1 node - 1 worker), làm quen kubectl, pod, deployment, service.
