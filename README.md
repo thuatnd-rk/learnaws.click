@@ -17,10 +17,10 @@ A comprehensive learning platform for AWS services and cloud infrastructure.
 
 ## 🗺 Roadmap
 
-**3-Month Plan**
-- ✅ Month 1: Core platform, chatbot AI, Docker & CI/CD
-- 🔄 Month 2: Blog CMS, staging CI/CD, infrastructure with Terraform
-- ⏩ Month 3: EKS, GitOps, monitoring/logging, production-ready setup
+**3-Week Plan**
+- ✅ Week 1: Core platform, chatbot AI, Docker & CI/CD
+- 🔄 Week 2: Blog CMS, staging CI/CD, infrastructure with Terraform
+- ⏩ Week 3: EKS, GitOps, monitoring/logging, production-ready setup
 
 ## 🐳 Local Development with Docker
 
