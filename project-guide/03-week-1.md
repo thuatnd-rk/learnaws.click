@@ -1,53 +1,57 @@
-# ✅ Kế hoạch phát triển 1 tuần: DevOps AI WebApp MVP
+# ✅ Kế hoạch cập nhật cho **Tuần 1 – sử dụng K8s + ArgoCD**
 
-> 🎯 **Mục tiêu:** Hoàn thành MVP có giao diện chatbot đơn giản, gọi được AWS Bedrock, chạy bằng Docker và deploy lên EC2 với domain HTTPS.
-
----
-
-### 🔹 **Thứ 2 – Khởi tạo dự án & giao diện cơ bản**
-- Tạo GitHub repo `devops-ai-webapp`
-- Tạo cấu trúc thư mục: `frontend`, `backend`, `infra`, `.github/`, `docs/`
-- Init `frontend` bằng Next.js hoặc Vue, xoá code mẫu
-- Thiết kế layout và component giao diện chatbot (input + output)
-- Lưu state hội thoại bằng hook / reactive
+> 🎯 Mục tiêu: Build và triển khai DevOps AI WebApp trên cụm K8s (2 node EC2) bằng ArgoCD, không dùng Docker Compose.
 
 ---
 
-### 🔹 **Thứ 3 – Khởi tạo backend & kết nối API**
+### 🔹 **Thứ 2 – Setup repo & giao diện chatbot**
+- Tạo GitHub repo: `devops-ai-webapp`
+- Tạo thư mục chuẩn: `frontend/`, `backend/`, `k8s/`, `infra/`, `.github/`
+- Init project frontend (Next.js hoặc Vue) + Tailwind CSS
+- Thiết kế UI chatbot cơ bản: input + message list
+- Tạo giao diện nhận API trả lời từ backend mock
+
+---
+
+### 🔹 **Thứ 3 – Backend + kết nối Bedrock**
 - Init backend Node.js + Express
-- Cài `express`, `cors`, `dotenv`, tạo route `/api/chat`
-- Gọi API `/api/chat` từ frontend, hiển thị response lên giao diện
-- Tạo file `promptTemplate.js`, mock prompt DevOps Senior
+- Tạo route `/api/chat` mock
+- Tích hợp gọi AWS Bedrock (Claude) với SDK `@aws-sdk/client-bedrock-runtime`
+- Xử lý lỗi, validate input
 
 ---
 
-### 🔹 **Thứ 4 – Tích hợp AWS Bedrock**
-- Cài SDK: `@aws-sdk/client-bedrockruntime`
-- Cấu hình `.env`, AWS credentials (mount `.aws`)
-- Gửi prompt lên Bedrock → nhận response → trả về frontend
-- Thêm xử lý lỗi và validate input cơ bản
+### 🔹 **Thứ 4 – Viết Dockerfile + build image**
+- Viết Dockerfile chuẩn cho `frontend` và `backend` (multi-stage nếu cần)
+- Build image local, test bằng Docker
+- Push image lên ECR (cấu hình login ECR)
 
 ---
 
-### 🔹 **Thứ 5 – Docker hóa toàn bộ hệ thống**
-- Viết `Dockerfile` cho frontend (Next.js build static)
-- Viết `Dockerfile` cho backend
-- Tạo `docker-compose.yml`, mount `.env`, expose port
-- Kiểm thử full stack FE + BE + Bedrock qua Docker local
+### 🔹 **Thứ 5 – Triển khai cụm K8s (EC2 self-managed)**
+- Dùng 2 EC2 Ubuntu (1 control-plane, 1 worker)
+- Cài kubeadm, kubelet, kubectl
+- Init cluster (có thể dùng Calico/Flannel làm CNI)
+- Join node worker vào cluster
+- Cài kube-dashboard hoặc Lens để quan sát
 
 ---
 
-### 🔹 **Thứ 6 – CI/CD + Deploy EC2**
-- Tạo `.github/workflows/deploy.yml` (build → push image)
-- SSH vào EC2, cài Docker + Docker Compose
-- Deploy app bằng `docker-compose up -d`
-- Cài Nginx reverse proxy + Certbot miễn phí (HTTPS)
-- Cấu hình domain (Route53 / DNS)
+### 🔹 **Thứ 6 – Viết YAML K8s + cài ArgoCD**
+- Tạo YAML cho:
+  - `Deployment` FE + BE
+  - `Service`
+  - `Ingress` (có TLS nếu cần)
+  - `ConfigMap` & `Secret`
+- Tạo folder `k8s/overlays/staging`, `k8s/base`
+- Cài ArgoCD lên cluster, expose qua ingress
+- Tạo Application sync từ repo
 
 ---
 
-### 🔹 **Thứ 7 – Test cuối + hoàn thiện**
-- Truy cập app qua domain (HTTPS)
-- Test chatbot từ UI → backend → Bedrock
-- Viết `README.md` hướng dẫn setup + deploy
-- Đánh giá lại toàn bộ tiến độ và lập kế hoạch tiếp theo
+### 🔹 **Thứ 7 – Hoàn thiện & test**
+- Truy cập domain → test frontend + backend
+- Kiểm tra kết nối Bedrock
+- Check ArgoCD auto-sync (hoặc manual sync)
+- Viết `README.md` hướng dẫn deploy qua ArgoCD
+- Review & tối ưu lại manifest
