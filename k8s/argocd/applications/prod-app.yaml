@@ -1,17 +1,18 @@
+# k8s/argocd/applications/prod-app.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: learnaws-dev
+  name: learnaws-prod
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/thuatnd-rk/learnaws.click.git
-    targetRevision: develop
-    path: k8s/overlays/dev
+    targetRevision: main
+    path: k8s/overlays/prod
   destination:
     server: https://kubernetes.default.svc
-    namespace: learnaws-dev
+    namespace: learnaws
   syncPolicy:
     automated:
       prune: true

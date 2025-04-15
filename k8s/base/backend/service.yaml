@@ -1,0 +1,13 @@
+# k8s/base/backend/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: learnaws
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 3001
+    targetPort: http
+  type: ClusterIP

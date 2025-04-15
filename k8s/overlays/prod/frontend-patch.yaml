@@ -1,0 +1,8 @@
+# k8s/overlays/prod/frontend-patch.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: learnaws
+spec:
+  replicas: 2
