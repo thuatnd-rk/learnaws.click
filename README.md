@@ -29,7 +29,7 @@ A comprehensive learning platform for AWS services and cloud infrastructure.
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/your-username/learnaws.click.git
+git clone https://github.com/thuatnd-rk/learnaws.click.git
 cd learnaws.click
 ```
 
