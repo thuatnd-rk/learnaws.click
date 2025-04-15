@@ -1,52 +1,45 @@
-# Kubernetes & Terraform (Tháng 2)
+# Kubernetes & Terraform (Tuần 2)
 
 ## 🎯 Mục tiêu
 - Học và thực hành thành thạo Kubernetes core để thi CKA.
-- Tự triển khai cụm Kubernetes (không dùng EKS).
-- Triển khai ứng dụng DevOps AI WebApp lên cụm K8s.
-- Làm quen GitOps (chuẩn bị cho Phase 3).
+- Tự triển khai cụm Kubernetes thủ công (không dùng EKS).
+- Triển khai ứng dụng DevOps AI WebApp lên cụm K8s thực tế.
+- Làm quen GitOps (ArgoCD) để chuẩn bị triển khai GitOps trên EKS ở Phase 3.
 
 ---
 
-## 🛠 Triển khai cụm Kubernetes (không dùng EKS)
-- Dùng một trong các cách:
-  - Minikube (ưu tiên cho học local)
-  - Kind (K8s in Docker)
-  - Kubeadm (manual cluster, giống bài thi CKA)
-- Setup chuẩn: control plane, worker node, CNI (Calico/Flannel), kubeconfig
+## 🛠 Triển khai cụm Kubernetes thủ công
+- Dùng các công cụ triển khai:
+  - Minikube (ưu tiên để học local nhanh)
+  - Kubeadm (setup cụm thật trên EC2 – phù hợp luyện CKA)
+- Thiết lập đầy đủ:
+  - Control plane, worker node
+  - Kubeconfig, networking (CNI: Calico hoặc Flannel)
+  - Dashboard hoặc Lens (tuỳ chọn)
 
 ---
 
 ## 🧩 Resource & Ứng dụng thực tế
-- Viết YAML:
+- Viết YAML chuẩn K8s:
   - `Deployment`, `Service`, `Ingress`
   - `ConfigMap`, `Secret`
   - `HorizontalPodAutoscaler`
-- Deploy chatbot FE/BE (Next.js + Node.js API) lên K8s cluster của bạn
+- Triển khai chatbot FE/BE (Next.js + Node.js API) lên cụm K8s của bạn
+- Expose app qua Ingress với domain local hoặc custom DNS (`nip.io`, `xip.io`...)
 
 ---
 
-## 🔁 Terraform (cập nhật lại)
-- Vẫn triển khai:
-  - VPC, EC2 (dùng để host cluster K8s thủ công)
-  - Cấu hình tường lửa, subnet, static IP (nếu cần)
-- Không triển khai EKS trong tháng này
+## 🔁 Terraform (cập nhật)
+- Sử dụng Terraform để triển khai hạ tầng host cụm K8s:
+  - VPC, subnet, internet gateway, route table
+  - EC2 instances (control plane + worker)
+  - Security group, key pair, static IP (nếu cần)
+- **Không triển khai EKS trong tháng này**
 
 ---
 
 ## 🔧 GitOps (chuẩn bị cho Phase 3)
-- Làm quen với ArgoCD:
+- Làm quen với GitOps bằng ArgoCD:
   - Cài đặt ArgoCD lên cụm K8s local
-  - Deploy một app đơn giản từ Git repo
-
----
-
-## ✅ Gợi ý phân chia theo tuần
-| Tuần | Nội dung |
-|------|----------|
-| Tuần 1 | Cài đặt Minikube / Kind / kubeadm, quản lý kubeconfig |
-| Tuần 2 | Thực hành YAML: Pod, Deployment, Service, ConfigMap, Secret |
-| Tuần 3 | Auto-scaling với HPA, setup Ingress Controller (Nginx/Traefik) |
-| Tuần 4 | Deploy full chatbot WebApp vào cluster, cài thử ArgoCD |
-
----
+  - Sync 1 ứng dụng (ví dụ FE hoặc BE) từ Git repo qua ArgoCD
+  - Tìm hiểu cấu trúc GitOps repo: `apps/`, `base/`, `overlays/`

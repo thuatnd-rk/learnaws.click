@@ -1,26 +1,46 @@
 # Project Overview: DevOps AI WebApp
 
 ## 🎯 Mục tiêu
-Xây dựng một website cá nhân vừa để học tập, chia sẻ và thực hành các kiến thức DevOps, Solution Architecture, vừa là một dự án thực tế giúp phát triển kỹ năng.
+Xây dựng một website cá nhân vừa để học tập, thực hành và chia sẻ kiến thức về DevOps, Cloud, Solution Architecture. Đây đồng thời là một dự án thực tế giúp nâng cao kỹ năng triển khai hạ tầng, CI/CD, bảo mật, và ứng dụng AI.
 
 ## 🔧 Các chức năng chính
-1. **Chatbot AI**: Trả lời như một Senior DevOps Engineer (sử dụng AWS Bedrock/OpenAI).
-2. **Blog cá nhân**: Viết bài, chia sẻ kinh nghiệm DevOps, Cloud, CI/CD.
-3. **Chức năng mở rộng** (sẽ phát triển tiếp):
-   - Dashboard tiến độ học.
-   - Demo CI/CD pipeline.
+1. **Chatbot AI**: Trả lời như một Senior DevOps Engineer, sử dụng AWS Bedrock làm backend AI.
+2. **Blog cá nhân**: Viết bài Markdown chia sẻ kinh nghiệm về DevOps, CI/CD, Cloud.
+3. **Hệ thống người dùng**: Đăng ký, đăng nhập, quản lý phiên trò chuyện và giới hạn gọi AI.
+4. **Chức năng mở rộng** (phase sau):
+   - Dashboard theo dõi tiến độ học.
    - GitOps mini tool.
-   - Phân quyền, đăng nhập.
+   - Phân quyền (admin/user).
+   - CI/CD demo với staging/production.
 
 ## ⚙️ Tech Stack
-- **Frontend**: Next.js hoặc Vue.js + Tailwind
-- **Backend/API**: Node.js (Express hoặc Fastify)
-- **AI**: AWS Bedrock hoặc OpenAI
-- **CI/CD**: GitHub Actions
-- **Cloud**: AWS EC2 giai đoạn đầu, EKS về sau
+
+### Frontend
+- **Framework**: Next.js
+- **UI**: Tailwind CSS
+- **Markdown**: MDX hoặc thư viện parse markdown (gray-matter, remark)
+
+### Backend / API
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **AI Integration**: AWS Bedrock (Claude, Titan...) qua SDK `@aws-sdk/client-bedrockruntime`
+- **Auth**: JWT hoặc session-based (tùy môi trường)
+- **ORM**: Prisma (PostgreSQL)
+
+### Database
+- **Primary**: PostgreSQL (Docker Compose trong dev, RDS hoặc Aurora sau)
+- **Schema**: users, posts, messages, sessions
+
+### DevOps / Infra
+- **Containerization**: Docker
+- **Orchestration**: Docker Compose (dev), Kubernetes (prod)
 - **Reverse Proxy**: Nginx
-- **IaC**: Terraform
-- **Container**: Docker
-- **Container Orchestration**: Kubernetes
-- **Monitoring**: Prometheus, Grafana
-- **DB (nếu cần)**: PostgreSQL hoặc DynamoDB
+- **CI/CD**: GitHub Actions
+- **Infrastructure as Code**: Terraform
+- **Cloud Provider**: AWS
+  - **Giai đoạn đầu**: EC2 + Route 53 + S3 (blog assets, Terraform state)
+  - **Mở rộng**: EKS (Kubernetes), IAM, CloudWatch
+
+### Monitoring / Logging
+- **Logging**: Fluent Bit + CloudWatch (EKS phase)
+- **Monitoring**: Prometheus + Grafana (phase 3)
